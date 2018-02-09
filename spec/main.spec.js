@@ -161,6 +161,30 @@ describe('/api', () => {
             expect(res.body.comment.votes).to.equal(1);
           })
       });
+      it('DELETE returns status code of 204 when comment with given comment id deleted', () => {
+        let article_id;
+        let comment_id;
+        return request
+          .get('/api/articles')
+          .then(res => {
+            return res.body.articles[0]._id
+          })
+          .then(id => {
+            article_id = id;
+            return request
+              .get(`/api/articles/${article_id}/comments`)
+              .expect(200)
+          })
+          .then(res => {
+            return res.body.comments[0]._id;
+          })
+          .then(id => {
+            comment_id = id;
+            return request
+              .delete(`/api/comments/${comment_id}`)
+              .expect(204)
+          })
+      });
     });
   });
 });

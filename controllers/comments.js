@@ -13,4 +13,10 @@ function voteOnComment (req, res, next) {
     .catch(next)
 }
 
-module.exports = { voteOnComment };
+function deleteComment (req, res, next) {
+  Comments.deleteOne({ _id: req.params.comment_id })
+    .then(() => res.status(204).json())
+    .catch(next);
+}
+
+module.exports = { voteOnComment, deleteComment };
