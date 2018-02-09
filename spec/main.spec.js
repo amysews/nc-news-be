@@ -22,7 +22,7 @@ describe('/api', () => {
   });
   describe('/topics', () => {
     describe('/', () => {
-      it('returns all topics', () => {
+      it('GET returns all topics', () => {
         return request
           .get('/api/topics')
           .expect(200)
@@ -32,7 +32,7 @@ describe('/api', () => {
       });
     });
     describe('/:slug/articles', () => {
-      it('returns all articles for a given topic', () => {
+      it('GET returns all articles for a given topic', () => {
         return request
           .get('/api/topics/football/articles')
           .expect(200)
@@ -45,7 +45,7 @@ describe('/api', () => {
   });
   describe('/articles', () => {
     describe('/', () => {
-      it('returns all articles', () => {
+      it('GET returns all articles', () => {
         return request
           .get('/api/articles')
           .expect(200)
@@ -55,7 +55,7 @@ describe('/api', () => {
       });
     });
     describe('/:article_id', () => {
-      it('returns one article by article id', () => {
+      it('GET returns one article by article id', () => {
         let article_id;
         return request
           .get('/api/articles')
@@ -73,7 +73,7 @@ describe('/api', () => {
             expect(res.body.article._id).to.equal(article_id);
           })
       });
-      it('returns with vote increased or descreased based on query for a given article', () => {
+      it('PUT returns with vote increased or descreased based on query for a given article', () => {
         let article_id;
         return request
           .get('/api/articles')
@@ -92,7 +92,7 @@ describe('/api', () => {
       });
     });
     describe('/:article_id/comments', () => {
-      it('returns all comments for given article id', () => {
+      it('GET returns all comments for given article id', () => {
         let article_id;
         return request
           .get('/api/articles')
@@ -110,7 +110,7 @@ describe('/api', () => {
             expect(res.body.comments.length).to.equal(2);
           })
       });
-      it('returns with comment added when new comment added to article', () => {
+      it('POST returns with comment added when new comment added to article', () => {
         let article_id;
         return request
           .get('/api/articles')
@@ -121,7 +121,7 @@ describe('/api', () => {
             article_id = id;
             return request
               .post(`/api/articles/${id}/comments`)
-              .send({ 'comment': 'test comment'})
+              .send({ 'comment': 'test comment' })
               .set('Accept', 'application/json')
               .expect(200)
           })
@@ -131,5 +131,36 @@ describe('/api', () => {
           })
       });
     });
-  })
+  });
+  describe('/comments', () => {
+    describe('/:comment_id', () => {
+      it('PUT returns with vote increased or decreased based on query for a given comment', () => {
+        let article_id;
+        let comment_id;
+        return request
+          .get('/api/articles')
+          .then(res => {
+            return res.body.articles[0]._id
+          })
+          .then(id => {
+            article_id = id;
+            return request
+              .get(`/api/articles/${article_id}/comments`)
+              .expect(200)
+          })
+          .then(res => {
+            return res.body.comments[0]._id;
+          })
+          .then(id => {
+            comment_id = id;
+            return request
+              .put(`/api/comments/${comment_id}?vote=up`)
+              .expect(200)
+          })
+          .then(res => {
+            expect(res.body.comment.votes).to.equal(1);
+          })
+      });
+    });
+  });
 });
