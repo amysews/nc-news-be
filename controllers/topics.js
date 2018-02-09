@@ -12,8 +12,12 @@ function getAllTopics (req, res, next) {
 }
 
 function getAllArticlesByTopic (req, res, next) {
+  let page = +req.query.page || 0;
+  let limit = +req.query.limit || 10;
+  let sort = req.query.sort || null;
+
   let articles;
-  Articles.find({ belongs_to: req.params.slug }).lean()
+  Articles.find({ belongs_to: req.params.slug }).sort(sort).skip(page * limit).limit(limit).lean()
     .then(articlesResponse => {
       articles = articlesResponse;
       const promises = articles.map(article => Comments.find({ belongs_to: article._id }).lean())

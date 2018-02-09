@@ -5,8 +5,12 @@ const Articles = require('../models/articles');
 const Comments = require('../models/comments');
 
 function getAllArticles(req, res, next) {
+  let page = +req.query.page || 0;
+  let limit = +req.query.limit || 10;
+  let sort = req.query.sort || null;
+
   let articles;
-  Articles.find().lean()
+  Articles.find().sort(sort).skip(page * limit).limit(limit).lean()
     .then(articlesResponse => {
       articles = articlesResponse;
       const promises = articles.map(article => Comments.find({ belongs_to: article._id }).lean())
@@ -15,7 +19,7 @@ function getAllArticles(req, res, next) {
     .then(comments => {
       comments.forEach((comment, i) => articles[i].comments = comment.length)
     })
-    .then(() => res.json({ topic: req.params.slug, articles }))
+    .then(() => res.json({ page, limit, length: articles.length, sort, topic: req.params.slug, articles }))
     .catch(next);
 }
 
