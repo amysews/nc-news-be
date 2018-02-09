@@ -73,6 +73,23 @@ describe('/api', () => {
             expect(res.body.article._id).to.equal(article_id);
           })
       });
+      it('returns with vote increased or descreased based on query for a given article', () => {
+        let article_id;
+        return request
+          .get('/api/articles')
+          .then(res => {
+            return res.body.articles[0]._id
+          })
+          .then(id => {
+            article_id = id;
+            return request
+              .put(`/api/articles/${id}?vote=up`)
+              .expect(200)
+          })
+          .then(res => {
+            expect(res.body.article.votes).to.equal(1);
+          })
+      });
     });
     describe('/:article_id/comments', () => {
       it('returns all comments for given article id', () => {
@@ -112,7 +129,7 @@ describe('/api', () => {
             expect(res.body.article_id).to.equal(article_id);
             expect(res.body.comment.body).to.equal('test comment');
           })
-      })
+      });
     });
   })
 });
