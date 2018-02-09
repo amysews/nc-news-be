@@ -43,4 +43,36 @@ describe('/api', () => {
       });
     });
   });
+  describe('/articles', () => {
+    describe('/', () => {
+      it('returns all articles', () => {
+        return request
+          .get('/api/articles')
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles.length).to.equal(2);
+          })
+      });
+    });
+    describe('/:article_id', () => {
+      it('returns one article by article id', () => {
+        let article_id;
+        return request
+          .get('/api/articles')
+          .then(res => {
+            return res.body.articles[0]._id
+          })
+          .then(id => {
+            article_id = id;
+            return request
+              .get(`/api/articles/${id}`)
+              .expect(200)
+          })
+          .then(res => {
+            expect(res.body.article_id).to.equal(article_id);
+            expect(res.body.article._id).to.equal(article_id);
+          })
+      });
+    });
+  })
 });
