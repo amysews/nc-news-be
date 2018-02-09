@@ -93,6 +93,26 @@ describe('/api', () => {
             expect(res.body.comments.length).to.equal(2);
           })
       });
+      it('returns with comment added when new comment added to article', () => {
+        let article_id;
+        return request
+          .get('/api/articles')
+          .then(res => {
+            return res.body.articles[0]._id
+          })
+          .then(id => {
+            article_id = id;
+            return request
+              .post(`/api/articles/${id}/comments`)
+              .send({ 'comment': 'test comment'})
+              .set('Accept', 'application/json')
+              .expect(200)
+          })
+          .then(res => {
+            expect(res.body.article_id).to.equal(article_id);
+            expect(res.body.comment.body).to.equal('test comment');
+          })
+      })
     });
   })
 });

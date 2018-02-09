@@ -39,4 +39,19 @@ function getAllCommentByArticle (req, res, next) {
     .catch(next);
 }
 
-module.exports = { getAllArticles, getOneArticle, getAllCommentByArticle }
+function postCommentToArticle (req, res, next) {
+  const newComment = new Comments({
+		body: req.body.comment,
+		belongs_to: req.params.article_id,
+		created_by: 'northcoder'
+  });
+  newComment.save()
+    .then(comment => res.json({ article_id: req.params.article_id, comment }))
+    .catch(next);
+}
+
+function voteOnArticle (req, res, next) {
+  
+}
+
+module.exports = { getAllArticles, getOneArticle, getAllCommentByArticle, postCommentToArticle, voteOnArticle }
