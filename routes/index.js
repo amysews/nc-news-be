@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res) => res.send('Hello api'));
+const topicsRouter = require('./topics');
+
+router.use('/topics', topicsRouter);
 
 module.exports = router;
