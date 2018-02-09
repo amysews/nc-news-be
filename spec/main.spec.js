@@ -199,5 +199,16 @@ describe('/api', () => {
           });
       });
     });
+    describe('/:username', () => {
+      it('GET returns user with given username', () => {
+        return request
+          .get('/api/users/northcoder')
+          .expect(200)
+          .then(res => {
+            expect(res.body.username).to.equal('northcoder');
+            expect(res.body.user.username).to.equal('northcoder');
+          });
+      });
+    });
   });
 });
