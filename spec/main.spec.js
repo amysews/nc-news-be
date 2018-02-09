@@ -187,4 +187,17 @@ describe('/api', () => {
       });
     });
   });
+  describe('/users', () => {
+    describe('/', () => {
+      it('GET returns all users', () => {
+        return request
+          .get('/api/users')
+          .expect(200)
+          .then(res => {
+            expect(res.body.users.length).to.equal(1);
+            expect(res.body.users[0].username).to.equal('northcoder');
+          });
+      });
+    });
+  });
 });
