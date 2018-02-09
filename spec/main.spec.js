@@ -21,13 +21,26 @@ describe('/api', () => {
     mongoose.disconnect();
   });
   describe('/topics', () => {
-    it('returns all topics', () => {
-      return request
-        .get('/api/topics')
-        .expect(200)
-        .then(res => {
-          expect(res.body.topics.length).to.equal(3);
-        })
+    describe('/', () => {
+      it('returns all topics', () => {
+        return request
+          .get('/api/topics')
+          .expect(200)
+          .then(res => {
+            expect(res.body.topics.length).to.equal(3);
+          })
+      });
+    });
+    describe('/:slug/articles', () => {
+      it('returns all articles for a given topic', () => {
+        return request
+          .get('/api/topics/football/articles')
+          .expect(200)
+          .then(res => {
+            expect(res.body.topic).to.equal('football');
+            expect(res.body.articles.length).to.equal(1);
+          })
+      });
     });
   });
 });
