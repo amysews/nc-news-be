@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
+const router = require('./routes');
 const config = require('./config');
 const morgan = require('morgan');
 const db = config.DB[process.env.NODE_ENV] || process.env.DB;
@@ -16,6 +17,6 @@ mongoose.connect(db, { useMongoClient: true })
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-app.get('/', (req, res) => res.send('hello'));
+app.use('/api', router);
 
 module.exports = app;
