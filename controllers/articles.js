@@ -20,9 +20,23 @@ function getAllArticles (req, res, next) {
 }
 
 function getOneArticle (req, res, next) {
-  Articles.findOne({ _id: req.params.article_id })
-    .then(article => res.json({ article_id: req.params.article_id, article }))
+  let article;
+  Articles.findOne({ _id: req.params.article_id }).lean()
+    .then(articleResponse => {
+      article = articleResponse;
+      return Comments.find({ belongs_to: article._id }).lean()
+    })
+    .then(comments => {
+      article.comments = comments.length;
+    })
+    .then(() => res.json({ article_id: req.params.article_id, article }))
     .catch(next);
 }
 
-module.exports = { getAllArticles, getOneArticle }
+function getAllCommentByArticle (req, res, next) {
+  Comments.find({ belongs_to: req.params.article_id })
+    .then(comments => res.json({ article_id: req.params.article_id, comments }))
+    .catch(next);
+}
+
+module.exports = { getAllArticles, getOneArticle, getAllCommentByArticle }

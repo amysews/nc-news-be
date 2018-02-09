@@ -74,5 +74,25 @@ describe('/api', () => {
           })
       });
     });
+    describe('/:article_id/comments', () => {
+      it('returns all comments for given article id', () => {
+        let article_id;
+        return request
+          .get('/api/articles')
+          .then(res => {
+            return res.body.articles[0]._id
+          })
+          .then(id => {
+            article_id = id;
+            return request
+              .get(`/api/articles/${id}/comments`)
+              .expect(200)
+          })
+          .then(res => {
+            expect(res.body.article_id).to.equal(article_id);
+            expect(res.body.comments.length).to.equal(2);
+          })
+      });
+    });
   })
 });
