@@ -4,8 +4,10 @@
   "description": "### Background",
   "main": "config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "nodemon index.js",
+    "seed": "node seed/seed.js",
+    "seed-test": "node seed/test.seed.js",
+    "test": "mocha spec/main.spec.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +19,8 @@
     "log4js": "^1.0.1",
     "moment": "^2.17.0",
     "mongoose": "^4.7.0",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.14.12",
     "underscore": "^1.8.3"
   }
 }
