@@ -38,8 +38,13 @@ function getOneArticle(req, res, next) {
 }
 
 function getAllCommentByArticle(req, res, next) {
-  Comments.find({ belongs_to: req.params.article_id })
-    .then(comments => res.json({ article_id: req.params.article_id, comments }))
+  let sort = req.query.sort || null;
+
+  Comments.find({ belongs_to: req.params.article_id }).sort(sort)
+    .then(comments => {
+      console.log(comments);
+      return res.json({ article_id: req.params.article_id, sort, comments })
+    })
     .catch(next);
 }
 
