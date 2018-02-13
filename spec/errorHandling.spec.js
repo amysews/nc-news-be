@@ -195,4 +195,68 @@ describe.only('Error Handling', () => {
         })
     });
   });
+  describe('PUT /comments/:comment_id for voting', () => {
+    it('returns error when comment id is an invalid input', () => {
+      return request
+        .put(`/api/comments/123?vote=up`)
+        .expect(400)
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid comment id.")
+        })
+    });
+    it('returns error when vote query is an invalid input', () => {
+      let article_id;
+      let comment_id;
+      return request
+        .get('/api/articles')
+        .then(res => {
+          return res.body.articles[0]._id
+        })
+        .then(id => {
+          article_id = id;
+          return request
+            .get(`/api/articles/${article_id}/comments`)
+            .expect(200)
+        })
+        .then(res => {
+          return res.body.comments[0]._id;
+        })
+        .then(id => {
+          comment_id = id;
+          return request
+            .put(`/api/comments/${comment_id}?vote=upp`)
+            .expect(400)
+        })
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid vote query. Must be of the form vote=up or vote=down.")
+        })
+    });
+    it('returns error when vote query is an invalid input', () => {
+      let article_id;
+      let comment_id;
+      return request
+        .get('/api/articles')
+        .then(res => {
+          return res.body.articles[0]._id
+        })
+        .then(id => {
+          article_id = id;
+          return request
+            .get(`/api/articles/${article_id}/comments`)
+            .expect(200)
+        })
+        .then(res => {
+          return res.body.comments[0]._id;
+        })
+        .then(id => {
+          comment_id = id;
+          return request
+            .put(`/api/comments/${comment_id}`)
+            .expect(400)
+        })
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid vote query. Must be of the form vote=up or vote=down.")
+        })
+    });
+  });
 });
