@@ -4,14 +4,17 @@ const seedTest = require('../seed/test.seed');
 const expect = require('chai').expect;
 const request = require('supertest')(app);
 const mongoose = require('mongoose');
+const config = require('../config');
+const db = config.DB[process.env.NODE_ENV] || process.env.DB;
 
 describe('/api', () => {
   let docs = {};
   beforeEach(() => {
-    return mongoose.connection.dropDatabase()
-      .then(() => {
-        return seedTest();
-      })
+    const p = mongoose.connection.readyState === 0 ? mongoose.connect(db) : Promise.resolve()
+  
+    return p
+      .then(() => mongoose.connection.dropDatabase())
+      .then(() => seedTest())
       .then((data) => {
         docs = data;
         return docs;
