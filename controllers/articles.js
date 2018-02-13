@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.Promise = Promise;
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const Articles = require('../models/articles');
 const Comments = require('../models/comments');
@@ -8,6 +9,30 @@ function getAllArticles(req, res, next) {
   let page = +req.query.page || 0;
   let limit = +req.query.limit || 10;
   let sort = req.query.sort || null;
+
+  // Invalid input - page number
+  if (req.query.page && !/^\d+$/.test(req.query.page)) {
+    const err = new Error('Invalid page number. Page must be queried with a valid number.');
+    err.status = 400;
+    return next(err);
+  }
+
+  // Invalid input - limit number
+  if (req.query.limit && !/^\d+$/.test(req.query.limit)) {
+    const err = new Error('Invalid limit. Limit must be queried with a valid number.');
+    err.status = 400;
+    return next(err);
+  }
+
+  // Invalid input - sort
+  if (req.query.sort) {
+    const key = req.query.sort.match(/\w+/g)[0];
+    if (!['votes', 'comments', '_id'].includes(key)) {
+      const err = new Error('Invalid sort query. Sort must be queried with a valid term; votes, comments, _id.');
+      err.status = 400;
+      return next(err);
+    }
+  }
 
   let articles;
   Articles.find().sort(sort).skip(page * limit).limit(limit).lean()
@@ -24,8 +49,17 @@ function getAllArticles(req, res, next) {
 }
 
 function getOneArticle(req, res, next) {
+  const { article_id } = req.params;
+
+  // Invalid article id
+  if (!ObjectId.isValid(article_id)) {
+    const err = new Error('Invalid article id.');
+    err.status = 400;
+    return next(err);
+  }
+
   let article;
-  Articles.findOne({ _id: req.params.article_id }).lean()
+  Articles.findOne({ _id: article_id }).lean()
     .then(articleResponse => {
       article = articleResponse;
       return Comments.find({ belongs_to: article._id }).lean()
@@ -33,11 +67,11 @@ function getOneArticle(req, res, next) {
     .then(comments => {
       article.comments = comments.length;
     })
-    .then(() => res.json({ article_id: req.params.article_id, article }))
+    .then(() => res.json({ article_id, article }))
     .catch(next);
 }
 
-function getAllCommentByArticle(req, res, next) {
+function getAllCommentsByArticle(req, res, next) {
   let sort = req.query.sort || null;
   Comments.find({ belongs_to: req.params.article_id }).sort(sort)
     .then(comments => {
@@ -75,4 +109,4 @@ function voteOnArticle(req, res, next) {
     .catch(next)
 }
 
-module.exports = { getAllArticles, getOneArticle, getAllCommentByArticle, postCommentToArticle, voteOnArticle }
+module.exports = { getAllArticles, getOneArticle, getAllCommentsByArticle, postCommentToArticle, voteOnArticle }
