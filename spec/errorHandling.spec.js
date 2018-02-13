@@ -269,4 +269,14 @@ describe.only('Error Handling', () => {
         })
     });
   });
+  describe('GET /users/:username', () => {
+    it('returns error when username is an invalid input', () => {
+      return request
+        .get('/api/users/amy')
+        .expect(400)
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid username.")
+        })
+    });
+  });
 });

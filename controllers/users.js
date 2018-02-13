@@ -36,8 +36,21 @@ function getAllUsers (req, res, next) {
 }
 
 function getOneUser (req, res, next) {
-  Users.findOne({ username: req.params.username })
-    .then(user => res.json({ username: req.params.username, user }))
+  const { username } = req.params;
+
+  Users.find()
+    .then(users => users.map(user => user.username))
+    .then(usernames => {
+      if (!usernames.includes(username)) {
+        const err = new Error('Invalid username.');
+        err.status = 400;
+        return next(err);
+      }
+    })
+    .then(() => {
+      return Users.findOne({ username })
+    })
+    .then(user => res.json({ username, user }))
     .catch(next);
 }
 
