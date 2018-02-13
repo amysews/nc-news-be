@@ -59,6 +59,33 @@ describe.only('Error Handling', () => {
         })
     });
   });
+  describe('/articles/:article_id', () => {
+    it('returns error when article id is an invalid input', () => {
+      return request
+        .get(`/api/articles/123/comments`)
+        .expect(400)
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid article id.")
+        })
+    });
+    it('returns error when sort query is an invalid input', () => {
+      let article_id;
+      return request
+        .get('/api/articles')
+        .then(res => {
+          return res.body.articles[0]._id
+        })
+        .then(id => {
+          article_id = id;
+          return request
+            .get(`/api/articles/${id}/comments?sort=recent`)
+            .expect(400)
+        })
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid sort query. Sort must be queried with a valid term; votes, _id.")
+        })
+    });
+  });
   describe('/topics/:slug/articles', () => {
     it('returns error when page query is an invalid input', () => {
       return request

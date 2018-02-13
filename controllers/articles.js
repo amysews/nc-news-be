@@ -72,7 +72,26 @@ function getOneArticle(req, res, next) {
 }
 
 function getAllCommentsByArticle(req, res, next) {
+  const { article_id } = req.params;
   let sort = req.query.sort || null;
+
+  // Invalid article id
+  if (!ObjectId.isValid(article_id)) {
+    const err = new Error('Invalid article id.');
+    err.status = 400;
+    return next(err);
+  }
+
+  // Invalid input - sort
+  if (req.query.sort) {
+    const key = req.query.sort.match(/\w+/g)[0];
+    if (!['votes', '_id'].includes(key)) {
+      const err = new Error('Invalid sort query. Sort must be queried with a valid term; votes, _id.');
+      err.status = 400;
+      return next(err);
+    }
+  }
+
   Comments.find({ belongs_to: req.params.article_id }).sort(sort)
     .then(comments => {
       return res.json({ article_id: req.params.article_id, sort, comments })
