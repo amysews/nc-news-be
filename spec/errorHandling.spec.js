@@ -82,7 +82,7 @@ describe.only('Error Handling', () => {
             .expect(400)
         })
         .then(res => {
-          expect(res.body.error.message).to.equal("Invalid sort query. Sort must be queried with a valid term; votes, _id.")
+          expect(res.body.error.message).to.equal("Invalid sort query. Sort must be queried with a valid term; votes, created_at, _id.")
         })
     });
   });

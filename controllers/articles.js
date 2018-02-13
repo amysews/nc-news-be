@@ -85,8 +85,8 @@ function getAllCommentsByArticle(req, res, next) {
   // Invalid input - sort
   if (req.query.sort) {
     const key = req.query.sort.match(/\w+/g)[0];
-    if (!['votes', '_id'].includes(key)) {
-      const err = new Error('Invalid sort query. Sort must be queried with a valid term; votes, _id.');
+    if (!['votes', 'created_at', '_id'].includes(key)) {
+      const err = new Error('Invalid sort query. Sort must be queried with a valid term; votes, created_at, _id.');
       err.status = 400;
       return next(err);
     }
