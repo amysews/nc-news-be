@@ -86,6 +86,37 @@ describe.only('Error Handling', () => {
         })
     });
   });
+  describe('/articles/:article_id/comments POST', () => {
+    it('returns error when article id is an invalid input', () => {
+      return request
+        .post(`/api/articles/123/comments`)
+        .send({ 'comment': 'test comment' })
+        .set('Accept', 'application/json')
+        .expect(400)
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid article id.")
+        })
+    });
+    it('returns error when no comment body is provided', () => {
+      let article_id;
+      return request
+        .get('/api/articles')
+        .then(res => {
+          return res.body.articles[0]._id
+        })
+        .then(id => {
+          article_id = id;
+          return request
+            .post(`/api/articles/${id}/comments`)
+            .send({ 'comment': '' })
+            .set('Accept', 'application/json')
+            .expect(400)
+        })
+        .then(res => {
+          expect(res.body.error.message).to.equal("No comment body provided.")
+        })
+    });
+  });
   describe('/topics/:slug/articles', () => {
     it('returns error when page query is an invalid input', () => {
       return request

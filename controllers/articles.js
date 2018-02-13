@@ -100,6 +100,23 @@ function getAllCommentsByArticle(req, res, next) {
 }
 
 function postCommentToArticle(req, res, next) {
+  const { comment } = req.body;
+  const { article_id } = req.params;
+
+  // Missing comment body
+  if (!comment) {
+    const err = new Error('No comment body provided.');
+    err.status = 400;
+    return next(err);
+  }
+
+   // Invalid article id
+   if (!ObjectId.isValid(article_id)) {
+    const err = new Error('Invalid article id.');
+    err.status = 400;
+    return next(err);
+  }
+
   const newComment = new Comments({
     body: req.body.comment,
     belongs_to: req.params.article_id,
