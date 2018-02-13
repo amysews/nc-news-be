@@ -8,7 +8,7 @@ function voteOnComment (req, res, next) {
   const { vote } = req.query;
   const { comment_id } = req.params;
 
-  // Invalid article id
+  // Invalid comment id
   if (!ObjectId.isValid(comment_id)) {
     const err = new Error('Invalid comment id.');
     err.status = 400;
@@ -31,7 +31,16 @@ function voteOnComment (req, res, next) {
 }
 
 function deleteComment (req, res, next) {
-  Comments.deleteOne({ _id: req.params.comment_id })
+  const { comment_id } = req.params;
+
+  // Invalid comment id
+  if (!ObjectId.isValid(comment_id)) {
+    const err = new Error('Invalid comment id.');
+    err.status = 400;
+    return next(err);
+  }
+
+  Comments.deleteOne({ _id: comment_id })
     .then(() => res.status(204).json())
     .catch(next);
 }

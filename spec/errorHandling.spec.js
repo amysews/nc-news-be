@@ -259,4 +259,14 @@ describe.only('Error Handling', () => {
         })
     });
   });
+  describe('DELETE /comments/:comment_id', () => {
+    it('returns error when comment id is an invalid input', () => {
+      return request
+        .delete(`/api/comments/123`)
+        .expect(400)
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid comment id.")
+        })
+    });
+  });
 });
