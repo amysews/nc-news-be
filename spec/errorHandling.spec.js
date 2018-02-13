@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const config = require('../config');
 const db = config.DB[process.env.NODE_ENV] || process.env.DB;
 
-describe.only('Error Handling', () => {
+describe('Error Handling', () => {
   let docs = {};
   beforeEach(() => {
     const p = mongoose.connection.readyState === 0 ? mongoose.connect(db) : Promise.resolve()
