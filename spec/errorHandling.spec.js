@@ -23,7 +23,7 @@ describe.only('Error Handling', () => {
   after(() => {
     mongoose.disconnect();
   });
-  describe('/articles', () => {
+  describe('GET /articles', () => {
     it('returns error when page query is an invalid input', () => {
       return request
         .get('/api/articles?page=one')
@@ -49,7 +49,7 @@ describe.only('Error Handling', () => {
         })
     });
   });
-  describe('/articles/:article_id', () => {
+  describe('GET /articles/:article_id', () => {
     it('returns error when article id is an invalid input', () => {
       return request
         .get(`/api/articles/123`)
@@ -59,7 +59,7 @@ describe.only('Error Handling', () => {
         })
     });
   });
-  describe('/articles/:article_id', () => {
+  describe('GET /articles/:article_id/comments', () => {
     it('returns error when article id is an invalid input', () => {
       return request
         .get(`/api/articles/123/comments`)
@@ -86,7 +86,51 @@ describe.only('Error Handling', () => {
         })
     });
   });
-  describe('/articles/:article_id/comments POST', () => {
+  describe('PUT /articles/:article_id for voting', () => {
+    it('returns error when article id is an invalid input', () => {
+      return request
+        .put(`/api/articles/123?vote=up`)
+        .expect(400)
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid article id.")
+        })
+    });
+    it('returns error when vote query is an invalid input', () => {
+      let article_id;
+      return request
+        .get('/api/articles')
+        .then(res => {
+          return res.body.articles[0]._id
+        })
+        .then(id => {
+          article_id = id;
+          return request
+            .put(`/api/articles/${id}?vote=upp`)
+            .expect(400)
+        })
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid vote query. Must be of the form vote=up or vote=down.")
+        })
+    });
+    it('returns error when vote query is an invalid input', () => {
+      let article_id;
+      return request
+        .get('/api/articles')
+        .then(res => {
+          return res.body.articles[0]._id
+        })
+        .then(id => {
+          article_id = id;
+          return request
+            .put(`/api/articles/${id}`)
+            .expect(400)
+        })
+        .then(res => {
+          expect(res.body.error.message).to.equal("Invalid vote query. Must be of the form vote=up or vote=down.")
+        })
+    });
+  });
+  describe('POST /articles/:article_id/comments', () => {
     it('returns error when article id is an invalid input', () => {
       return request
         .post(`/api/articles/123/comments`)
@@ -117,7 +161,7 @@ describe.only('Error Handling', () => {
         })
     });
   });
-  describe('/topics/:slug/articles', () => {
+  describe('GET /topics/:slug/articles', () => {
     it('returns error when page query is an invalid input', () => {
       return request
         .get('/api/topics/football/articles?page=one')

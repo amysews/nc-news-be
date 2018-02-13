@@ -110,8 +110,8 @@ function postCommentToArticle(req, res, next) {
     return next(err);
   }
 
-   // Invalid article id
-   if (!ObjectId.isValid(article_id)) {
+  // Invalid article id
+  if (!ObjectId.isValid(article_id)) {
     const err = new Error('Invalid article id.');
     err.status = 400;
     return next(err);
@@ -129,11 +129,27 @@ function postCommentToArticle(req, res, next) {
 
 function voteOnArticle(req, res, next) {
   const { vote } = req.query;
+  const { article_id } = req.params;
+
+  // Invalid article id
+  if (!ObjectId.isValid(article_id)) {
+    const err = new Error('Invalid article id.');
+    err.status = 400;
+    return next(err);
+  }
+
+  // Invalid vote query
+  if (!vote || !['up', 'down'].includes(vote)) {
+    const err = new Error('Invalid vote query. Must be of the form vote=up or vote=down.');
+    err.status = 400;
+    return next(err);
+  }
+
   let num;
   if (vote === 'up') num = 1;
   if (vote === 'down') num = -1;
   let article;
-  Articles.findByIdAndUpdate({ _id: req.params.article_id }, { $inc: { votes: num } }, { new: true }).lean()
+  Articles.findByIdAndUpdate({ _id: article_id }, { $inc: { votes: num } }, { new: true }).lean()
     .then(articleResponse => {
       article = articleResponse;
       return Comments.find({ belongs_to: article._id }).lean()
