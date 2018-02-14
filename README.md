@@ -22,11 +22,12 @@ The following tools are required to run this API locally. Links to guides have b
 To run this project locally, clone this repository to your local machine and install the dependencies:
 ```
 git clone https://github.com/amysews/BE-FT-northcoders-news.git
+cd BE-FT-northcoders-news
 npm install
 ```
 To run MongoDB in your terminal enter the following command in your terminal and keep this window open:
 ```
-~/mongodb/bin/mongod
+mongod
 ```
 Inside the project folder, you need to first seed the database from the seed file:
 ```

@@ -21,7 +21,7 @@ app.use(morgan('dev'));
 
 app.use('/api', router);
 
-app.use(function (err, req, res) {
+app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.json({
     error: {
@@ -29,6 +29,7 @@ app.use(function (err, req, res) {
       message: err.message
     }
   });
+  next();
 });
 
 module.exports = app;
