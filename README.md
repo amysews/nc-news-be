@@ -1,63 +1,85 @@
 ## Northcoders News API
 
-### Background
+### About
 
-We will be building the API which we used in the Northcoders News Sprint during the
-Front End block of the course. Your mongoose models and a Database seed file have been done for you.
+API for [Northcoders News](https://github.com/amysews/FE-FT-NC-News) - built using RESTful principles.
 
-Look closely at the response you get for each route on http://northcoders-news-api.herokuapp.com/ You will notice that we also send data such as the comment and vote count for each article. You will need to think carefully about how to do this in your API.
+Built using Node.js (v9.2.0), Express.js (v4.14.0), MongoDB (v) and Mongoose (v4.7.0).
 
-You will need to get all your routes built up first as you can share the functionality between you `GET comments by id` route and the comment count on the articles response for example.
+The API has been deployed to Heroku and can be accessed [here] (#)
 
-### Mongoose Documentation
+### Environment Setup
 
-The below are all model methods that you call on your models.
+The following tools are required to run this API locally. Links to guides have been provided to help with installation where required:
 
-* [find](http://mongoosejs.com/docs/api.html#model_Model.find)
-* [findOne](http://mongoosejs.com/docs/api.html#model_Model.findOne)
-* [findOneAndUpdate](http://mongoosejs.com/docs/api.html#model_Model.findOneAndUpdate)
-* [findOneAndRemove](http://mongoosejs.com/docs/api.html#model_Model.findOneAndRemove)
-* [findById](http://mongoosejs.com/docs/api.html#model_Model.findById)
-* [findByIdAndUpdate](http://mongoosejs.com/docs/api.html#model_Model.findByIdAndUpdate)
-* [findByIdAndRemove](http://mongoosejs.com/docs/api.html#model_Model.findByIdAndRemove)
-* [update](http://mongoosejs.com/docs/api.html#model_Model.update)
+* npm - [installation guide](https://www.npmjs.com/get-npm)
+* Node.js - [installation guide](https://nodejs.org/en/download/package-manager/)
+* git - [installation guide](https://git-scm.com/)
+* MongoDB - [installation guide](https://docs.mongodb.com/manual/installation/)
 
-There are also some methods that can be called on the documents that get returned. These are:
+### Project Setup
 
-* [remove](http://mongoosejs.com/docs/api.html#model_Model-remove)
-* [save](http://mongoosejs.com/docs/api.html#model_Model-save)
-* [count](http://mongoosejs.com/docs/api.html#model_Model.count)
+To run this project locally, clone this repository to your local machine and install the dependencies:
+```
+git clone https://github.com/amysews/BE-FT-northcoders-news.git
+npm install
+```
+To run MongoDB in your terminal enter the following command in your terminal and keep this window open:
+```
+~/mongodb/bin/mongod
+```
+Inside the project folder, you need to first seed the database from the seed file:
+```
+npm run seed
+```
+To run the server, enter the following command:
+```
+npm start
+```
+The server is setup to run on PORT 3000 (this can be changed in the config.js file) and can be accessed from http://localhost:3000
 
-### Tasks
+### Testing
 
-1. Seed your database with the main seed file `$ node seed/seed.js`
-2. Build your express App
-3. Mount an API Router onto your app
-4. Define the routes described below
-5. Define controller functions for each of your routes
-6. Once you have all your routes start to tackle responding with the vote and comment counts on article requests like this http://northcoders-news-api.herokuapp.com/api/articles
-7. Test your api routes!
+To test the API run the following command:
+```
+npm test
+```
+Tests are ran using a separate seed database (this is initialised every time a test is ran).
 
-### Routes
+### API Endpoints
 ```
 GET /api/topics
 ```
-Get all the topics
+Returns array of topics
 
 ```
 GET /api/topics/:topic_id/articles
 ```
-Return all the articles for a certain topic
+Returns array of articles for a given topic.
+
+This endpoint can also be queried by page number, limit of responses and sort method, e.g:
+/api/topics/:topic_id/articles?page=1&limit=5&sort=+votes
 
 ```
 GET /api/articles
 ```
-Returns all the articles
+Returns array of articles
+
+This endpoint can also be queried by page number, limit of responses and sort method, e.g:
+/api/articles?page=0&limit=10&sort=-votes
+
+```
+GET /api/articles/:article_id
+```
+Returns one article with that given article id
 
 ```
 GET /api/articles/:article_id/comments
 ```
-Get all the comments for a individual article
+Returns array of comments for a given article id.
+
+This endpoint can also be queried by sort method, e.g:
+/api/articles/:article_id/comments?sort=-created_at
 
 ```
 POST /api/articles/:article_id/comments
@@ -83,6 +105,11 @@ DELETE /api/comments/:comment_id
 Deletes a comment
 
 ```
+GET /api/users
+```
+Returns array of users
+
+```
 GET /api/users/:username
 ```
-Returns a JSON object with the profile data for the specified user.
+Returns profile data for the given user
