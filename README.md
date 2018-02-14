@@ -2,7 +2,7 @@
 
 ### About
 
-API for [Northcoders News](https://github.com/amysews/FE-FT-NC-News) - built using RESTful principles.
+API for [Northcoders News](https://github.com/amysews/nc-news-fe) - built using RESTful principles.
 
 Built using Node.js (v9.2.0), Express.js (v4.14.0), MongoDB (v) and Mongoose (v4.7.0).
 
@@ -21,8 +21,8 @@ The following tools are required to run this API locally. Links to guides have b
 
 To run this project locally, clone this repository to your local machine and install the dependencies:
 ```
-git clone https://github.com/amysews/BE-FT-northcoders-news.git
-cd BE-FT-northcoders-news
+git clone https://github.com/amysews/nc-news-be.git
+cd nc-news-be
 npm install
 ```
 To run MongoDB in your terminal enter the following command in your terminal and keep this window open:
