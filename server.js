@@ -21,13 +21,13 @@ app.use(morgan('dev'));
 
 app.use('/api', router);
 
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res) {
   res.status(err.status || 500);
   res.json({
-      error: {
-        status: err.status,
-        message: err.message
-      }
+    error: {
+      status: err.status,
+      message: err.message
+    }
   });
 });
 

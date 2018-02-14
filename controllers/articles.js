@@ -38,11 +38,11 @@ function getAllArticles(req, res, next) {
   Articles.find().sort(sort).skip(page * limit).limit(limit).lean()
     .then(articlesResponse => {
       articles = articlesResponse;
-      const promises = articles.map(article => Comments.find({ belongs_to: article._id }).lean())
-      return Promise.all(promises)
+      const promises = articles.map(article => Comments.find({ belongs_to: article._id }).lean());
+      return Promise.all(promises);
     })
     .then(comments => {
-      comments.forEach((comment, i) => articles[i].comments = comment.length)
+      comments.forEach((comment, i) => articles[i].comments = comment.length);
     })
     .then(() => res.json({ page, limit, length: articles.length, sort, topic: req.params.slug, articles }))
     .catch(next);
@@ -62,7 +62,7 @@ function getOneArticle(req, res, next) {
   Articles.findOne({ _id: article_id }).lean()
     .then(articleResponse => {
       article = articleResponse;
-      return Comments.find({ belongs_to: article._id }).lean()
+      return Comments.find({ belongs_to: article._id }).lean();
     })
     .then(comments => {
       article.comments = comments.length;
@@ -94,7 +94,7 @@ function getAllCommentsByArticle(req, res, next) {
 
   Comments.find({ belongs_to: req.params.article_id }).sort(sort)
     .then(comments => {
-      return res.json({ article_id: req.params.article_id, sort, comments })
+      return res.json({ article_id: req.params.article_id, sort, comments });
     })
     .catch(next);
 }
@@ -152,13 +152,13 @@ function voteOnArticle(req, res, next) {
   Articles.findByIdAndUpdate({ _id: article_id }, { $inc: { votes: num } }, { new: true }).lean()
     .then(articleResponse => {
       article = articleResponse;
-      return Comments.find({ belongs_to: article._id }).lean()
+      return Comments.find({ belongs_to: article._id }).lean();
     })
     .then(comments => {
       article.comments = comments.length;
     })
     .then(() => res.json({ vote: req.query.vote, article }))
-    .catch(next)
+    .catch(next);
 }
 
-module.exports = { getAllArticles, getOneArticle, getAllCommentsByArticle, postCommentToArticle, voteOnArticle }
+module.exports = { getAllArticles, getOneArticle, getAllCommentsByArticle, postCommentToArticle, voteOnArticle };

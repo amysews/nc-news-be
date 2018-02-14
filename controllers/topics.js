@@ -52,11 +52,11 @@ function getAllArticlesByTopic(req, res, next) {
       }
     })
     .then(() => {
-      return Articles.find({ belongs_to: req.params.slug }).sort(sort).skip(page * limit).limit(limit).lean()
+      return Articles.find({ belongs_to: req.params.slug }).sort(sort).skip(page * limit).limit(limit).lean();
     })
     .then(articlesResponse => {
       articles = articlesResponse;
-      const promises = articles.map(article => Comments.find({ belongs_to: article._id }).lean())
+      const promises = articles.map(article => Comments.find({ belongs_to: article._id }).lean());
       return Promise.all(promises);
     })
     .then(comments => {
@@ -66,4 +66,4 @@ function getAllArticlesByTopic(req, res, next) {
     .catch(next);
 }
 
-module.exports = { getAllTopics, getAllArticlesByTopic }
+module.exports = { getAllTopics, getAllArticlesByTopic };

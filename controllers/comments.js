@@ -27,7 +27,7 @@ function voteOnComment (req, res, next) {
   if (vote === 'down') num = -1;
   Comments.findByIdAndUpdate({ _id: comment_id }, { $inc: { votes: num } }, { new: true })
     .then(comment => res.json({ vote: req.query.vote, comment }))
-    .catch(next)
+    .catch(next);
 }
 
 function deleteComment (req, res, next) {

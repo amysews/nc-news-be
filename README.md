@@ -6,7 +6,7 @@ API for [Northcoders News](https://github.com/amysews/FE-FT-NC-News) - built usi
 
 Built using Node.js (v9.2.0), Express.js (v4.14.0), MongoDB (v) and Mongoose (v4.7.0).
 
-The API has been deployed to Heroku and can be accessed [here] (#)
+The API has been deployed to Heroku and can be accessed [here](#)
 
 ### Environment Setup
 

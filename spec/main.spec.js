@@ -10,8 +10,8 @@ const db = config.DB[process.env.NODE_ENV] || process.env.DB;
 describe('/api', () => {
   let docs = {};
   beforeEach(() => {
-    const p = mongoose.connection.readyState === 0 ? mongoose.connect(db) : Promise.resolve()
-  
+    const p = mongoose.connection.readyState === 0 ? mongoose.connect(db) : Promise.resolve();
+
     return p
       .then(() => mongoose.connection.dropDatabase())
       .then(() => seedTest())
@@ -31,7 +31,7 @@ describe('/api', () => {
           .expect(200)
           .then(res => {
             expect(res.body.topics.length).to.equal(3);
-          })
+          });
       });
     });
     describe('/:slug/articles', () => {
@@ -42,7 +42,7 @@ describe('/api', () => {
           .then(res => {
             expect(res.body.topic).to.equal('football');
             expect(res.body.articles.length).to.equal(1);
-          })
+          });
       });
     });
   });
@@ -54,7 +54,7 @@ describe('/api', () => {
           .expect(200)
           .then(res => {
             expect(res.body.articles.length).to.equal(2);
-          })
+          });
       });
     });
     describe('/:article_id', () => {
@@ -63,35 +63,33 @@ describe('/api', () => {
         return request
           .get('/api/articles')
           .then(res => {
-            return res.body.articles[0]._id
+            return res.body.articles[0]._id;
           })
           .then(id => {
             article_id = id;
             return request
               .get(`/api/articles/${id}`)
-              .expect(200)
+              .expect(200);
           })
           .then(res => {
             expect(res.body.article_id).to.equal(article_id);
             expect(res.body.article._id).to.equal(article_id);
-          })
+          });
       });
       it('PUT returns with vote increased or descreased based on query for a given article', () => {
-        let article_id;
         return request
           .get('/api/articles')
           .then(res => {
-            return res.body.articles[0]._id
+            return res.body.articles[0]._id;
           })
           .then(id => {
-            article_id = id;
             return request
               .put(`/api/articles/${id}?vote=up`)
-              .expect(200)
+              .expect(200);
           })
           .then(res => {
             expect(res.body.article.votes).to.equal(1);
-          })
+          });
       });
     });
     describe('/:article_id/comments', () => {
@@ -100,25 +98,25 @@ describe('/api', () => {
         return request
           .get('/api/articles')
           .then(res => {
-            return res.body.articles[0]._id
+            return res.body.articles[0]._id;
           })
           .then(id => {
             article_id = id;
             return request
               .get(`/api/articles/${id}/comments`)
-              .expect(200)
+              .expect(200);
           })
           .then(res => {
             expect(res.body.article_id).to.equal(article_id);
             expect(res.body.comments.length).to.equal(2);
-          })
+          });
       });
       it('POST returns with comment added when new comment added to article', () => {
         let article_id;
         return request
           .get('/api/articles')
           .then(res => {
-            return res.body.articles[0]._id
+            return res.body.articles[0]._id;
           })
           .then(id => {
             article_id = id;
@@ -126,12 +124,12 @@ describe('/api', () => {
               .post(`/api/articles/${id}/comments`)
               .send({ 'comment': 'test comment' })
               .set('Accept', 'application/json')
-              .expect(200)
+              .expect(200);
           })
           .then(res => {
             expect(res.body.article_id).to.equal(article_id);
             expect(res.body.comment.body).to.equal('test comment');
-          })
+          });
       });
     });
   });
@@ -143,13 +141,13 @@ describe('/api', () => {
         return request
           .get('/api/articles')
           .then(res => {
-            return res.body.articles[0]._id
+            return res.body.articles[0]._id;
           })
           .then(id => {
             article_id = id;
             return request
               .get(`/api/articles/${article_id}/comments`)
-              .expect(200)
+              .expect(200);
           })
           .then(res => {
             return res.body.comments[0]._id;
@@ -158,11 +156,11 @@ describe('/api', () => {
             comment_id = id;
             return request
               .put(`/api/comments/${comment_id}?vote=up`)
-              .expect(200)
+              .expect(200);
           })
           .then(res => {
             expect(res.body.comment.votes).to.equal(1);
-          })
+          });
       });
       it('DELETE returns status code of 204 when comment with given comment id deleted', () => {
         let article_id;
@@ -170,13 +168,13 @@ describe('/api', () => {
         return request
           .get('/api/articles')
           .then(res => {
-            return res.body.articles[0]._id
+            return res.body.articles[0]._id;
           })
           .then(id => {
             article_id = id;
             return request
               .get(`/api/articles/${article_id}/comments`)
-              .expect(200)
+              .expect(200);
           })
           .then(res => {
             return res.body.comments[0]._id;
@@ -185,8 +183,8 @@ describe('/api', () => {
             comment_id = id;
             return request
               .delete(`/api/comments/${comment_id}`)
-              .expect(204)
-          })
+              .expect(204);
+          });
       });
     });
   });
